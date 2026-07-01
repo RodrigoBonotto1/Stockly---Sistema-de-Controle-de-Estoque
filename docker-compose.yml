@@ -1,0 +1,39 @@
+services:
+  stockly-db:
+    image: postgres:16-alpine
+    container_name: stockly-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: stockly
+      POSTGRES_USER: stockly
+      POSTGRES_PASSWORD: stockly123
+    ports:
+      - "5432:5432"
+    volumes:
+      - stockly_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockly -d stockly"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  stockly-api:
+    build: .
+    container_name: stockly-api
+    restart: unless-stopped
+    depends_on:
+      stockly-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: stockly-db
+      DB_PORT: 5432
+      DB_NAME: stockly
+      DB_USER: stockly
+      DB_PASSWORD: stockly123
+      JWT_SECRET: c3RvY2tseS1zdXBlci1zZWNyZXQta2V5LXBhcmEtand0LXRva2Vucy1zZWd1cmFuY2E=
+      JWT_EXPIRATION_MS: 86400000
+    ports:
+      - "8080:8080"
+
+volumes:
+  stockly_pgdata:
