@@ -21,9 +21,14 @@ Stockly é uma API REST para gerenciamento de estoque, desenvolvida com **Spring
 Pré-requisitos: Docker e Docker Compose instalados.
 
 ```bash
-git clone <url-do-seu-repositorio>
-cd stockly
+docker compose build
 docker compose up
+```
+
+Para encerrar:
+
+```bash
+docker compose down
 ```
 
 Isso vai subir automaticamente:
